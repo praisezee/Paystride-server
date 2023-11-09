@@ -11,10 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('payment_point', function (Blueprint $table) {
+        Schema::create('staffs', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->integer('phone_number');
+            $table->string('role');
+            $table->integer('payment_point_id');
+            $table->string('email')->unique();
+            $table->string('password');
+            $table->string('merchant_id');
+            $table->string('token');
             $table->timestamps();
         });
     }
@@ -24,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('payment_point');
+        Schema::dropIfExists('staffs');
     }
 };
