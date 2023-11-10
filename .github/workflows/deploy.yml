@@ -95,7 +95,7 @@ jobs:
 
     - name: Deploy to EC2
       run: |
-        rsync -avz --delete --exclude-from=".gitignore" --exclude-from=<(echo '.env') -e "ssh -i ~/.ssh/id_rsa" ./ ubuntu@${{ secrets.EC2_PUBLIC_IP }}:/var/www/paystride/
+        rsync -avz --delete --exclude-from=".gitignore" -e "ssh -i ~/.ssh/id_rsa" ./ ubuntu@${{ secrets.EC2_PUBLIC_IP }}:/var/www/paystride/
         ssh -i ~/.ssh/id_rsa ubuntu@${{ secrets.EC2_PUBLIC_IP }} 'sudo chown -R ubuntu:ubuntu /var/www && cd /var/www/paystride/ && composer install --no-interaction --prefer-dist --optimize-autoloader && php artisan migrate --force && php artisan key:generate && php artisan config:cache && php artisan route:cache && sudo chown -R www-data.www-data /var/www/paystride/storage'
 
     - name: Clear SSH key
