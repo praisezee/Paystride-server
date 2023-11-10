@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\Validator;
 use App\Mail\OtpMail;
 use Illuminate\Support\Facades\Mail;
 use Laravel\Sanctum\PersonalAccessToken;
-
 class MerchantController extends Controller
 {
     /**
@@ -17,7 +16,7 @@ class MerchantController extends Controller
      */
     public function index()
     {
-        // Implement logic for retrieving a list of merchants
+        //
     }
 
 
@@ -28,7 +27,7 @@ class MerchantController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function create(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string',
@@ -66,6 +65,12 @@ class MerchantController extends Controller
     }
 
 
+    private function sendOtpEmail($email, $otp)
+    {
+        Mail::to($email)->send(new OtpMail($otp));
+    }
+
+
     /**
      * Verify the merchant email.
      */
@@ -98,24 +103,32 @@ class MerchantController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Merchant $merchant)
+    public function show(string $id)
     {
-        // Implement logic for retrieving a specific merchant
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(string $id)
+    {
+        //
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Merchant $merchant)
+    public function update(Request $request, string $id)
     {
-        // Implement logic for updating a specific merchant
+        //
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Merchant $merchant)
+    public function destroy(string $id)
     {
-        // Implement logic for deleting a specific merchant
+        //
     }
 }
