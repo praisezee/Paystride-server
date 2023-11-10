@@ -2,25 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\ForgetPassword;
 use App\Models\Merchant;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 
 class MerchantController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create(Request $request)
+    public function register(Request $request)
     {
 
         if(count($request->all()) < 1){
@@ -52,43 +48,57 @@ class MerchantController extends Controller
         return $newMerchant;
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
+    // Function to handle a merchant forgotten password
+
+    public function forget_password(Request $request){
+        if(count($request->all()) < 1){
+            return new Response([
+                'message' => 'All fields are required'
+            ],400);
+        };
+
+        $user = Merchant::where('email', $request->email);
+        if(!$user->exists()){
+            return new Response([
+                'message' => 'Invalid email'
+            ],401);
+        }
+
+        $token = [Str::random(20)];
+
+        $url = route('/api/reset_password',$token);
+        return Mail::to($request->email)->send(new ForgetPassword($url));
+
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
+    public function reset_password(Request $request){
+        if(count($request->all()) < 1){
+            return new Response([
+                'message' => 'All fields are required'
+            ],400);
+        };
+
+        $user = Merchant::where('email', $request->email);
+        if(!$user->exists()){
+            return new Response([
+                'message' => 'Invalid email'
+            ],401);
+        }
+
+        $match = Hash::check($request->old_password, $user->password);
+        if (!$match) {
+            return new Response([
+                'message' => 'Old Password is incorrect'
+            ],403);
+        }
+
+        $newPassword = Hash::make($request->new_password);
+
+        Merchant::where('email', $request->email)->update(array('password'=> $newPassword));
+
+        return new Response([
+            'message' => 'Password has been updated successfully.'
+        ],200);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
-    }
 }
