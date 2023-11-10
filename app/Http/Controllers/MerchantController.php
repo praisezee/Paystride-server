@@ -94,7 +94,8 @@ class MerchantController extends Controller
 
         $newPassword = Hash::make($request->new_password);
 
-        Merchant::where('email', $request->email)->update(array('password'=> $newPassword));
+        $user->password = $newPassword;
+        $user->save();
 
         return new Response([
             'message' => 'Password has been updated successfully.'
