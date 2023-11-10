@@ -20,6 +20,11 @@ class MerchantController extends Controller
         // Implement logic for retrieving a list of merchants
     }
 
+
+    private function sendOtpEmail($email, $otp)
+    {
+        Mail::to($email)->send(new OtpMail($otp));
+    }
     /**
      * Store a newly created resource in storage.
      */
@@ -50,6 +55,7 @@ class MerchantController extends Controller
             'password' => $hashedPassword,
             'referred_by' => $request->referred_by,
             't_and_c' => (bool) $request->t_and_c,
+            'email_verified_at' => null,
             'otp' => $otp,
         ]);
 
@@ -59,10 +65,7 @@ class MerchantController extends Controller
         return response(['message' => 'OTP sent to your email for verification'], 200);
     }
 
-    private function sendOtpEmail($email, $otp)
-    {
-        Mail::to($email)->send(new OtpMail($otp));
-    }
+
     /**
      * Verify the merchant email.
      */
@@ -79,10 +82,10 @@ class MerchantController extends Controller
 
         if ($merchant) {
             // Update user status to verified
-            $merchant->update(['email_verified_at' => now()]);
-
-            // Optionally, you can clear the stored OTP
-            $merchant->update(['otp' => null]);
+            $merchant->update([
+                'email_verified_at' => now(),
+                'otp' => null,
+            ]);
 
             // Generate a token for the verified merchant
             $token = $merchant->createToken('merchant-token')->plainTextToken;
