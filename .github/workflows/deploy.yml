@@ -88,6 +88,11 @@ jobs:
     - name: Install Composer dependencies
       run: composer install --no-interaction --prefer-dist --optimize-autoloader
 
+    - name: Change ownership of /var/www
+      run: |
+        ssh -i ~/.ssh/id_rsa ubuntu@${{ secrets.EC2_PUBLIC_IP }} 'sudo chown -R ubuntu:ubuntu /var/www'
+  
+
     - name: Deploy to EC2
       run: |
         rsync -avz --delete --exclude-from=".gitignore" -e "ssh -i ~/.ssh/id_rsa" ./ ubuntu@${{ secrets.EC2_PUBLIC_IP }}:/var/www/paystride/
