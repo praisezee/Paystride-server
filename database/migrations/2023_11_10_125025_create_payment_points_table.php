@@ -11,10 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('payment_point', function (Blueprint $table) {
+        Schema::create('payment_points', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->integer('phone_number');
+            $table->string('phone_number');
+            $table->bigInteger('amount')->default(0);
+            $table->foreignId('staff_id')->references('id')->on('staff')->onDelete('cascade');
+            $table->string('token');
             $table->timestamps();
         });
     }
@@ -24,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('payment_point');
+        Schema::dropIfExists('payment_points');
     }
 };

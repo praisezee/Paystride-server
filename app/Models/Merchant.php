@@ -12,4 +12,12 @@ class Merchant extends Model
     protected $fillable = [
         'name','business_name','email','phone_number','password', 'referred_by', 't_and_c', 'token'
     ];
+
+    public function staff () {
+        return $this->hasMany(Staff::class);
+    }
+
+    public function payment_point(){
+        return $this->hasMany(Payment_point::class);
+    }
 }
