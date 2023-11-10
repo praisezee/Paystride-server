@@ -4,6 +4,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ApiKeyController;
 use App\Http\Controllers\SomethingController;
+use App\Http\Controllers\MerchantController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -26,5 +28,9 @@ Route::group([
 
     Route::post('/just/an/example', [SomethingController::class, 'justAnExample']);
 
-    // ...
+    
 });
+
+// Use apiResource for Merchant resource
+Route::apiResource('merchants', MerchantController::class);
+Route::post('/verifyemail', [MerchantController::class, 'verifyEmail']);

@@ -16,11 +16,10 @@ return new class extends Migration
             $table->string('name');
             $table->string('business_name')->nullable(false);
             $table->string('email')->unique()->nullable(false);
-            $table->integer('phone_number')->nullable(false);
+            $table->string('phone_number')->nullable(false);
             $table->string('password')->nullable(false);
             $table->string('referred_by')->nullable();
-            $table->boolean('t_and_c');
-            $table->integer('token')->nullable(true);
+            $table->boolean('t_and_c')->default(false);
             $table->timestamps();
         });
     }

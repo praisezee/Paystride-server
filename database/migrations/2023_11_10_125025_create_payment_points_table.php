@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('phone_number');
-            $table->bigInteger('amount')->default(0);
+            $table->decimal('amount', 10, 2)->default(0); // Adjusted for currency values
             $table->foreignId('staff_id')->references('id')->on('staff')->onDelete('cascade');
-            $table->string('token');
+            $table->string('token')->nullable();
             $table->timestamps();
         });
     }
