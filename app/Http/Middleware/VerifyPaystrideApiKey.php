@@ -14,16 +14,14 @@ class VerifyPaystrideApiKey
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
     public function handle(Request $request, Closure $next): Response
-    {
-        $apiKey = config('app.paystride_api_key');
+{
+    $apiKey = $request->header('x-api-key');
 
-        $apiKeyIsValid = (
-            ! empty($apiKey)
-            && $request->header('x-api-key') == $apiKey
-        );
+    $apiKeyIsValid = ApiKey::where('key', $apiKey)->exists();
 
-        abort_if (! $apiKeyIsValid, 403, 'Access denied');
+    abort_if(!$apiKeyIsValid, 403, 'Access denied');
 
-        return $next($request);
-    }
+    return $next($request);
+}
+
 }

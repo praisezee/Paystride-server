@@ -48,6 +48,7 @@ return [
 
         'ses' => [
             'transport' => 'ses',
+            'region' => 'us-east-1',
         ],
 
         'mailgun' => [

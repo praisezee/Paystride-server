@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('password');
             $table->foreignId('merchant_id')->references('id')->on('merchants')->onDelete('cascade');
-            $table->string('token');
+            $table->string('token')->nullable(); 
             $table->timestamps();
         });
     }

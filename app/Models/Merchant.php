@@ -3,21 +3,24 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Laravel\Sanctum\HasApiTokens;
 
-class Merchant extends Model
+class Merchant extends Authenticatable
 {
-    use HasFactory;
+    use HasFactory, HasApiTokens;
 
     protected $fillable = [
-        'name','business_name','email','phone_number','password', 'referred_by', 't_and_c', 'token'
+        'name', 'business_name', 'email', 'phone_number', 'password', 'referred_by', 't_and_c'
     ];
 
-    public function staff () {
+    public function staff()
+    {
         return $this->hasMany(Staff::class);
     }
 
-    public function payment_point(){
+    public function payment_point()
+    {
         return $this->hasMany(Payment_point::class);
     }
 }
