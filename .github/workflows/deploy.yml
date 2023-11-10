@@ -61,7 +61,7 @@ jobs:
         echo "MAIL_USERNAME=" >> .env
         echo "MAIL_PASSWORD=" >> .env
         echo "MAIL_ENCRYPTION=null" >> .env
-        echo "MAIL_FROM_ADDRESS=support@paystride.co" >> .env
+        echo "MAIL_FROM_ADDRESS=${{ secrets.MAIL_FROM_ADDRESS }}" >> .env
         echo "MAIL_FROM_NAME=\${APP_NAME}" >> .env
 
         echo "AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}" >> .env
