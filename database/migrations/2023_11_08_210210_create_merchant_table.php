@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('password')->nullable(false);
             $table->string('referred_by')->nullable();
             $table->boolean('t_and_c')->default(false);
+            $table->string('otp')->nullable();
             $table->timestamps();
         });
     }
@@ -29,6 +30,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('merchants');
+        Schema::table('merchants', function (Blueprint $table) {
+            $table->dropColumn('otp');
+        });
     }
 };

@@ -11,7 +11,7 @@ class Merchant extends Authenticatable
     use HasFactory, HasApiTokens;
 
     protected $fillable = [
-        'name', 'business_name', 'email', 'phone_number', 'password', 'referred_by', 't_and_c'
+        'name', 'business_name', 'email', 'phone_number', 'password', 'referred_by', 't_and_c', 'otp'
     ];
 
     public function staff()

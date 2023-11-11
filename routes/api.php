@@ -34,3 +34,4 @@ Route::group([
 // Use apiResource for Merchant resource
 Route::apiResource('merchants', MerchantController::class);
 Route::post('/verifyemail', [MerchantController::class, 'verifyEmail']);
+Route::post('/merchants/resend-otp', [MerchantController::class, 'resendOtp']);

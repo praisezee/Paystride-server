@@ -2,13 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\MerchantResource;
 use App\Models\Merchant;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use App\Mail\OtpMail;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Laravel\Sanctum\PersonalAccessToken;
+
 class MerchantController extends Controller
 {
     /**
@@ -16,18 +20,13 @@ class MerchantController extends Controller
      */
     public function index()
     {
-        //
+        // Implement logic for retrieving a list of merchants
     }
 
-
-    private function sendOtpEmail($email, $otp)
-    {
-        Mail::to($email)->send(new OtpMail($otp));
-    }
     /**
      * Store a newly created resource in storage.
      */
-    public function create(Request $request)
+    public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string',
@@ -45,7 +44,6 @@ class MerchantController extends Controller
 
         $hashedPassword = Hash::make($request->password);
 
-        $otp = rand(100000, 999999); // Generate a 6-digit OTP
         $newMerchant = Merchant::create([
             'name' => $request->name,
             'business_name' => $request->business_name,
@@ -55,19 +53,41 @@ class MerchantController extends Controller
             'referred_by' => $request->referred_by,
             't_and_c' => (bool) $request->t_and_c,
             'email_verified_at' => null,
-            'otp' => $otp,
         ]);
 
         // Send OTP to user's email
-        $this->sendOtpEmail($newMerchant->email, $otp);
+        $this->sendOtpEmail($newMerchant->email);
 
         return response(['message' => 'OTP sent to your email for verification'], 200);
     }
 
-
-    private function sendOtpEmail($email, $otp)
+    /**
+     * Send OTP to the user's email.
+     */
+    private function sendOtpEmail($email)
     {
-        Mail::to($email)->send(new OtpMail($otp));
+        $otp = rand(100000, 999999);
+        $merchant = Merchant::where('email', $email)->first();
+
+        if ($merchant) {
+            // // Log if merchant is found
+            // info('Merchant Found: ' . json_encode($merchant));
+
+            // // Log the OTP value before update
+            // info('Before OTP Update: ' . $merchant->otp);
+
+            // Update the user's OTP
+            $merchant->update(['otp' => $otp]);
+
+            // // Log the OTP value after update
+            // info('After OTP Update: ' . $merchant->otp);
+
+            // Send OTP to user's email
+            Mail::to($email)->send(new OtpMail($otp));
+        } else {
+            // Log if merchant is not found
+            info('Merchant Not Found for Email: ' . $email);
+        }
     }
 
 
@@ -76,36 +96,86 @@ class MerchantController extends Controller
      */
     public function verifyEmail(Request $request)
     {
+        info('Verification Request Data: ' . json_encode($request->all()));
         $request->validate([
+            'email' => 'required|email',
             'otp' => 'required|numeric',
         ]);
 
         $merchant = Merchant::where('email', $request->email)
             ->where('otp', $request->otp)
-            ->whereNull('email_verified_at') // Ensure email is not already verified
+            ->whereNull('email_verified_at')
             ->first();
 
         if ($merchant) {
             // Update user status to verified
             $merchant->update([
                 'email_verified_at' => now(),
-                'otp' => null,
+                'otp' => null, // Optionally, you can clear the stored OTP
             ]);
 
             // Generate a token for the verified merchant
             $token = $merchant->createToken('merchant-token')->plainTextToken;
 
-            return response(['message' => 'Email verified successfully', 'data' => $merchant, 'token' => $token], 200);
+            // Use the MerchantResource to format the response
+            return (new MerchantResource($merchant))->additional(['token' => $token, 'message' => 'Email verified successfully'], 200);
         } else {
             return response(['message' => 'Invalid OTP or email'], 400);
         }
     }
+
+    /**
+     * Resend OTP to the user's email.
+     */
+    public function resendOtp(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+        ]);
+
+        $merchant = Merchant::where('email', $request->email)
+            ->whereNull('email_verified_at')
+            ->first();
+
+        if ($merchant) {
+            // Check if there is a recent OTP resend attempt (within the last minute)
+            $recentResendAttempt = DB::table('otp_resend_attempts')
+                ->where('email', $request->email)
+                ->where('created_at', '>', now()->subMinute(5))
+                ->first();
+
+            if ($recentResendAttempt) {
+                // Resend attempt too soon, return an error
+                return response(['message' => 'Too many resend attempts. Try again later.'], 429);
+            }
+
+            // Generate a new OTP
+            $otp = rand(100000, 999999);
+
+            // Update the user's OTP
+            $merchant->update(['otp' => $otp]);
+
+            // Record the resend attempt
+            DB::table('otp_resend_attempts')->insert([
+                'email' => $request->email,
+                'created_at' => now(),
+            ]);
+
+            // Send OTP to user's email
+            $this->sendOtpEmail($request->email);
+
+            return response(['message' => 'OTP resent to your email for verification'], 200);
+        } else {
+            return response(['message' => 'Invalid email or email already verified'], 400);
+        }
+    }
+
     /**
      * Display the specified resource.
      */
     public function show(string $id)
     {
-        //
+        // Implement logic for retrieving a specific merchant
     }
 
     /**
@@ -113,7 +183,7 @@ class MerchantController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        // Implement logic for editing a specific merchant
     }
 
     /**
@@ -121,7 +191,7 @@ class MerchantController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        // Implement logic for updating a specific merchant
     }
 
     /**
@@ -129,6 +199,6 @@ class MerchantController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        // Implement logic for deleting a specific merchant
     }
 }
