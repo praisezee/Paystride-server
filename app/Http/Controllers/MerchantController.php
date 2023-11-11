@@ -28,8 +28,8 @@ class MerchantController extends Controller
      */
     public function store(Request $request)
     {
-        $requestData = json_decode($request->getContent(), true);
-        $validator = Validator::make($requestData, [
+        // $requestData = json_decode($request->getContent(), true);
+        $validator = Validator::make($request->all(), [
             'name' => 'required|string',
             'business_name' => 'required|string',
             'email' => 'required|email|unique:merchants,email',
