@@ -56,7 +56,10 @@ jobs:
         echo "REDIS_PORT=6379" >> .env
 
 
-        echo "MAIL_ENCRYPTION=null" >> .env
+        echo "MAIL_MAILER=ses" >> .env
+        echo "MAIL_HOST=email-smtp.us-east-1.amazonaws.com" >> .env
+        echo "MAIL_PORT=587" >> .env
+        echo "MAIL_ENCRYPTION=tls" >> .env
         echo "MAIL_FROM_ADDRESS=${{ secrets.MAIL_FROM_ADDRESS }}" >> .env
         echo "MAIL_FROM_NAME=\${APP_NAME}" >> .env
 
