@@ -26,10 +26,12 @@ Route::group([
     'middleware' => 'with_paystride_api_key'
 ], function () {
 
-    Route::post('/just/an/example', [SomethingController::class, 'justAnExample']);
+   //endpoints to be wrapped around the api key
 
     
 });
+Route::post('/generate-api-key', [ApiKeyController::class, 'generateApiKey']);
+
 
 // Use apiResource for Merchant resource
 Route::apiResource('merchants', MerchantController::class);

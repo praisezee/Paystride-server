@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\ApiKey;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,15 +14,15 @@ class VerifyPaystrideApiKey
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next): Response
-{
-    $apiKey = $request->header('x-api-key');
+    public function handle($request, Closure $next)
+    {
+        $apiKey = $request->header('X-API-Key');
 
-    $apiKeyIsValid = ApiKey::where('key', $apiKey)->exists();
+        if (!$apiKey || !ApiKey::where('key', $apiKey)->exists()) {
+            return response()->json(['error' => 'Unauthorized. Invalid API key.'], 401);
+        }
 
-    abort_if(!$apiKeyIsValid, 403, 'Access denied');
-
-    return $next($request);
-}
+        return $next($request);
+    }
 
 }
