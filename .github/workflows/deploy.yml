@@ -55,11 +55,7 @@ jobs:
         echo "REDIS_PASSWORD=null" >> .env
         echo "REDIS_PORT=6379" >> .env
 
-        echo "MAIL_MAILER=smtp" >> .env
-        echo "MAIL_HOST=mailpit" >> .env
-        echo "MAIL_PORT=1025" >> .env
-        echo "MAIL_USERNAME=" >> .env
-        echo "MAIL_PASSWORD=" >> .env
+
         echo "MAIL_ENCRYPTION=null" >> .env
         echo "MAIL_FROM_ADDRESS=${{ secrets.MAIL_FROM_ADDRESS }}" >> .env
         echo "MAIL_FROM_NAME=\${APP_NAME}" >> .env
