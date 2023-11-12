@@ -19,7 +19,7 @@ class ForgetPassword extends Mailable
      */
     public function __construct(private $url)
     {
-        //
+        $this->url = $url;
     }
 
     /**
@@ -28,7 +28,7 @@ class ForgetPassword extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            from: new Address('support@paystride.com', 'Paystride Support'),
+            from: new Address('support@paystride.co', 'Paystride Support'),
             subject:'Forgot Password',
         );
     }

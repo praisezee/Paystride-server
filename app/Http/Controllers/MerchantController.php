@@ -2,15 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\MerchantResource;
 use App\Mail\ForgetPassword;
 use App\Models\Merchant;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
 use App\Mail\OtpMail;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Laravel\Sanctum\PersonalAccessToken;
+
 class MerchantController extends Controller
 {
     /**
@@ -24,7 +27,7 @@ class MerchantController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function create(Request $request)
+    public function store(Request $request)
     {
         // $requestData = json_decode($request->getContent(), true);
         $validator = Validator::make($request->all(), [
@@ -101,13 +104,15 @@ class MerchantController extends Controller
 
             // Generate a token for the verified merchant
             $token = $merchant->createToken('merchant-token')->plainTextToken;
+            // Transform the data using the MerchantResource
+            $merchantResource = new MerchantResource($merchant);
 
-            return response(['message' => 'Email verified successfully', 'data' => $merchant, 'token' => $token], 200);
+            return response(['message' => 'Email verified successfully', 'data' => $merchantResource, 'token' => $token], 200);
         } else {
             return response(['message' => 'Invalid OTP or email'], 400);
         }
     }
-     /**
+    /**
      * Resend OTP to the user's email.
      */
     public function resendOtp(Request $request)
@@ -187,7 +192,8 @@ class MerchantController extends Controller
 
 
     // Updating a merchant password
-    public function reset_password(Request $request){
+    public function reset_password(Request $request)
+    {
         //checking the necessary data was passwd through the body
         $validator = Validator::make($request->all(), [
             'email' => 'required|string',
@@ -200,44 +206,51 @@ class MerchantController extends Controller
         }
 
         $merchant = Merchant::where('email', $request->email)
-            ->where('password', $request->old_password)
             ->first();
 
-        if (!$merchant){
-            return response(['message' => 'Merchant not found'], 400);
-        }else{
-            $newHashedPassword = Hash::make($request->new_password); //Hashing the new password before storage
-
-            $merchant->password = $newHashedPassword; // updating the password stored in the database to the newly hashed password
-
-            $merchant->save();
-
-            return response(['message' => 'Merchant password has be changed successfully'], 200);
+        if (!$merchant || !Hash::check($request->old_password, $merchant->password)) {
+            return response(['message' => 'Invalid email or old password'], 400);
         }
+        // Check if the new password is different from the current one
+        if (Hash::check($request->new_password, $merchant->password)) {
+            return response(['message' => 'New password must be different from the current password'], 400);
+        }
+
+        $newHashedPassword = Hash::make($request->new_password); //Hashing the new password before storage
+
+        DB::transaction(function () use ($merchant, $newHashedPassword) {
+            $merchant->password = $newHashedPassword;
+            $merchant->save();
+        });
+
+        return response(['message' => 'Merchant password has been changed successfully'], 200);
     }
 
     //Merchant Forget password logic
-    public function forgot_password(Request $request){
+    public function forgot_password(Request $request)
+    {
         //checking the necessary data was passwd through the body
         $validator = Validator::make($request->all(), [
             'email' => 'required|string',
         ]);
 
-        if ($validator->fails()){
+        if ($validator->fails()) {
             return response(['message' => $validator->errors()->first()], 400);
         }
 
         $merchant = Merchant::where('email', $request->email)->first();
 
-        if (!$merchant){
+        if (!$merchant) {
             return response(['message' => 'Merchant not found'], 400);
-        }else{
-            $token = $merchant->createToken('merchant-token')->plainTextToken;
-            $url = route('/forgot-password',$token);
-            $merchant->otp = $token; // saving the token to the db for verification purpose
+        } else {
+            $token = Str::random(60);
+
+            $merchant->otp = Hash::make($token); // saving the token to the db for verification purpose
             $merchant->save();
+
+            $url = url('/forgot-password', ['token' => $token]);
             Mail::to($request->email)->send(new ForgetPassword($url));
-            return response(['message' => 'Merchant password link has been sent'], 200);
+            return response(['message' => 'Merchant password reset link has been sent'], 200);
         }
     }
 }
