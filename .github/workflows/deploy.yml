@@ -90,11 +90,33 @@ jobs:
     - name: Change ownership of /var/www
       run: |
         ssh -i ~/.ssh/id_rsa ubuntu@${{ secrets.EC2_PUBLIC_IP }} 'sudo chown -R ubuntu:ubuntu /var/www'
-  
+
+
+    - name: Create custom .gitignore
+      run: |
+        echo "/.phpunit.cache" > custom.gitignore
+        echo "/node_modules" >> custom.gitignore
+        echo "/public/build" >> custom.gitignore
+        echo "/public/hot" >> custom.gitignore
+        echo "/public/storage" >> custom.gitignore
+        echo "/storage/*.key" >> custom.gitignore
+        echo "/vendor" >> custom.gitignore
+        echo ".env.backup" >> custom.gitignore
+        echo ".env.production" >> custom.gitignore
+        echo ".phpunit.result.cache" >> custom.gitignore
+        echo "Homestead.json" >> custom.gitignore
+        echo "Homestead.yaml" >> custom.gitignore
+        echo "auth.json" >> custom.gitignore
+        echo "npm-debug.log" >> custom.gitignore
+        echo "yarn-error.log" >> custom.gitignore
+        echo "/.fleet" >> custom.gitignore
+        echo "/.idea" >> custom.gitignore
+        echo "/.vscode" >> custom.gitignore
+
 
     - name: Deploy to EC2
       run: |
-        rsync -avz --delete --exclude-from=".gitignore" -e "ssh -i ~/.ssh/id_rsa" ./ ubuntu@${{ secrets.EC2_PUBLIC_IP }}:/var/www/paystride/
+        rsync -avz --delete --exclude-from="custom.gitignore" -e "ssh -i ~/.ssh/id_rsa" ./ ubuntu@${{ secrets.EC2_PUBLIC_IP }}:/var/www/paystride/
         ssh -i ~/.ssh/id_rsa ubuntu@${{ secrets.EC2_PUBLIC_IP }} 'sudo chown -R ubuntu:ubuntu /var/www && cd /var/www/paystride/ && composer install --no-interaction --prefer-dist --optimize-autoloader && php artisan migrate --force && php artisan key:generate'
 
     - name: file permission storage 
