@@ -14,12 +14,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::prefix('/api')->group(function(){
-    Route::post('/merchant/signup',[MerchantController::class, 'register']);
-    Route::post('/merchant/forget-password',[MerchantController::class, 'forget_password']);
-    Route::post('/merchant/reset-password',[MerchantController::class, 'reset_password']);
-    Route::post('/merchant/verify-email', MerchantController::class, 'verifyEmail');
-});
+// Route::prefix('/api')->group(function(){
+//     Route::post('/merchant/signup',[MerchantController::class, 'register']);
+//     Route::post('/merchant/forget-password',[MerchantController::class, 'forget_password']);
+//     Route::post('/merchant/reset-password',[MerchantController::class, 'reset_password']);
+//     Route::post('/merchant/verify-email', MerchantController::class, 'verifyEmail');
+// });
 
 Route::get('/', function () {
     return view('welcome');

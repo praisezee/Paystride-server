@@ -20,6 +20,8 @@ class MerchantResource extends JsonResource
             'business_name' => $this->business_name,
             'email' => $this->email,
             'phone_number' => $this->phone_number,
+            't_and_c' => $this->t_and_c,
+            'referred_by' => $this->referred_by,
             // Add other fields as needed
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,

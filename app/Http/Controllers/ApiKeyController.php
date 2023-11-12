@@ -4,15 +4,16 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\ApiKey;
+use Illuminate\Support\Str;
 
 class ApiKeyController extends Controller
 {
-    public function generate(Request $request)
+    public function generateApiKey()
     {
-        $apiKey = ApiKey::generateKey();
-        $apiKeyModel = ApiKey::create(['key' => $apiKey]);
+        $apiKey = Str::random(32); // You can adjust the key length as needed
 
-        return response()->json(['api_key' => $apiKeyModel->key])
-        ->header('Content-Type', 'application/json');
+        ApiKey::create(['key' => $apiKey]);
+
+        return response()->json(['api_key' => $apiKey]);
     }
 }
