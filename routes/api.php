@@ -37,3 +37,5 @@ Route::post('/generate-api-key', [ApiKeyController::class, 'generateApiKey']);
 Route::apiResource('merchants', MerchantController::class);
 Route::post('/verifyemail', [MerchantController::class, 'verifyEmail']);
 Route::post('/merchants/resend-otp', [MerchantController::class, 'resendOtp']);
+Route::post('/merchant/reset-password',[MerchantController::class, 'reset_password']);
+Route::post('/merchant/verify-email', MerchantController::class, 'verifyEmail');
