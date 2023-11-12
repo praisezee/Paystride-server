@@ -55,11 +55,7 @@ jobs:
         echo "REDIS_PASSWORD=null" >> .env
         echo "REDIS_PORT=6379" >> .env
 
-        echo "MAIL_MAILER=smtp" >> .env
-        echo "MAIL_HOST=mailpit" >> .env
-        echo "MAIL_PORT=1025" >> .env
-        echo "MAIL_USERNAME=" >> .env
-        echo "MAIL_PASSWORD=" >> .env
+
         echo "MAIL_ENCRYPTION=null" >> .env
         echo "MAIL_FROM_ADDRESS=${{ secrets.MAIL_FROM_ADDRESS }}" >> .env
         echo "MAIL_FROM_NAME=\${APP_NAME}" >> .env
@@ -96,7 +92,15 @@ jobs:
     - name: Deploy to EC2
       run: |
         rsync -avz --delete --exclude-from=".gitignore" -e "ssh -i ~/.ssh/id_rsa" ./ ubuntu@${{ secrets.EC2_PUBLIC_IP }}:/var/www/paystride/
-        ssh -i ~/.ssh/id_rsa ubuntu@${{ secrets.EC2_PUBLIC_IP }} 'sudo chown -R ubuntu:ubuntu /var/www && cd /var/www/paystride/ && composer install --no-interaction --prefer-dist --optimize-autoloader && php artisan migrate --force && php artisan key:generate && php artisan config:cache && php artisan route:cache && sudo chown -R www-data.www-data /var/www/paystride/storage'
+        ssh -i ~/.ssh/id_rsa ubuntu@${{ secrets.EC2_PUBLIC_IP }} 'sudo chown -R ubuntu:ubuntu /var/www && cd /var/www/paystride/ && composer install --no-interaction --prefer-dist --optimize-autoloader && php artisan migrate --force && php artisan key:generate'
+
+    - name: file permission storage 
+      run: |
+        ssh -i ~/.ssh/id_rsa ubuntu@${{ secrets.EC2_PUBLIC_IP }} 'chmod -R ugo+rw /var/www/paystride/storage/logs'
+
+    - name: file permision framework
+      run: |
+        ssh -i ~/.ssh/id_rsa ubuntu@${{ secrets.EC2_PUBLIC_IP }} 'chmod -R ugo+rw /var/www/paystride/storage/framework'
 
     - name: Clear SSH key
       run: rm ~/.ssh/id_rsa
