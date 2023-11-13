@@ -25,7 +25,7 @@ jobs:
 
     - name: Echo Environment Variables to .env
       run: |
-        echo "APP_NAME=Laravel" > .env
+        echo "APP_NAME=paystride" > .env
         echo "APP_ENV=local" >> .env
         echo "APP_KEY=" >> .env
         echo "APP_DEBUG=true" >> .env
