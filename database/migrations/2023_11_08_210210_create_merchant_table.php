@@ -20,7 +20,6 @@ return new class extends Migration
             $table->string('password')->nullable(false);
             $table->string('referred_by')->nullable();
             $table->boolean('t_and_c')->default(false);
-            $table->string('otp')->nullable();
             $table->timestamps();
         });
     }
