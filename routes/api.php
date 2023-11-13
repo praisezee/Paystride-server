@@ -5,7 +5,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ApiKeyController;
 use App\Http\Controllers\SomethingController;
 use App\Http\Controllers\MerchantController;
-
+use App\Http\Controllers\StaffController;
+use App\Models\Staff;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,7 +29,7 @@ Route::group([
 
    //endpoints to be wrapped around the api key
 
-    
+
 });
 Route::post('/generate-api-key', [ApiKeyController::class, 'generateApiKey']);
 
@@ -39,6 +40,10 @@ Route::apiResource('merchants', MerchantController::class)->except(['create', 'e
 // Add specific routes after apiResource to avoid conflicts
 Route::post('/verifyemail', [MerchantController::class, 'verifyEmail']);
 Route::post('/merchants/resend-otp', [MerchantController::class, 'resendOtp']);
-Route::post('/merchant/reset-password', [MerchantController::class, 'reset_password']);
-Route::post('/merchant/forgot-password', [MerchantController::class, 'forgot_password']);
-Route::post('/merchant/verify-email', [MerchantController::class, 'verifyEmail']);
+Route::post('/merchants/reset-password', [MerchantController::class, 'reset_password']);
+Route::post('/merchants/forgot-password', [MerchantController::class, 'forgot_password']);
+Route::post('/merchants/verify-email', [MerchantController::class, 'verifyEmail']);
+
+Route::get('/merchants/${id}/users', [StaffController::class, 'show_staff']);
+Route::post('/merchants/users', [StaffController::class, 'create_staff']);
+Route::put('/merchants/users/${id}/roles', [StaffController::class, 'update_role']);
