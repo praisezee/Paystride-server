@@ -20,9 +20,22 @@ class MerchantController extends Controller
      * Display a listing of the resource.
      */
     public function index()
-    {
-        //
+{
+    try {
+        $merchants = Merchant::all();
+        
+        if ($merchants->isEmpty()) {
+            return response(['message' => 'No merchants found'], 404);
+        }
+
+        $merchantResources = MerchantResource::collection($merchants);
+
+        return response(['data' => $merchantResources], 200);
+    } catch (\Exception $e) {
+        return response(['message' => $e->getMessage()], 500);
     }
+}
+
 
     /**
      * Store a newly created resource in storage.

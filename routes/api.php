@@ -36,14 +36,14 @@ Route::post('/generate-api-key', [ApiKeyController::class, 'generateApiKey']);
 
 // Use apiResource for Merchant resource
 Route::apiResource('merchants', MerchantController::class)->except(['create', 'edit']);
+Route::get('/merchants/all', [MerchantController::class, 'index']);
 
 // Add specific routes after apiResource to avoid conflicts
 Route::post('/verifyemail', [MerchantController::class, 'verifyEmail']);
 Route::post('/merchants/resend-otp', [MerchantController::class, 'resendOtp']);
 Route::post('/merchants/reset-password', [MerchantController::class, 'reset_password']);
 Route::post('/merchants/forgot-password', [MerchantController::class, 'forgot_password']);
-Route::post('/merchants/verify-email', [MerchantController::class, 'verifyEmail']);
 
-Route::get('/merchants/${id}/users', [StaffController::class, 'show_staff']);
+Route::get('/merchants/{id}/users', [StaffController::class, 'show_staff']);
 Route::post('/merchants/users', [StaffController::class, 'create_staff']);
-Route::put('/merchants/users/${id}/roles', [StaffController::class, 'update_role']);
+Route::put('/merchants/users/{id}/roles', [StaffController::class, 'update_role']);
