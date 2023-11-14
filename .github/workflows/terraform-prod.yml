@@ -1,16 +1,16 @@
-name: 'Terraform - Production'
+name: Terraform-Production
 
 on:
   push:
     branches:
-     - master
+      - master
     paths: 
-     - .infrastructure/prod/**
+      - .infrastructure/prod/**
   pull_request:
     branches:
-     - master
+      - master
     paths: 
-     - .infrastructure/prod/**
+      - .infrastructure/prod/**
 
 env:
   AWS_ACCESS_KEY_ID: ${{ secrets.ACCESS_KEY }}
