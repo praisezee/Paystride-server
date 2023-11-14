@@ -18,7 +18,7 @@ env:
 
 jobs:
   build:
-    name: build
+    name: Build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -27,7 +27,7 @@ jobs:
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v1
 
-      - name: Run terraform fmt check
+      - name: Run Terraform fmt check
         id: fmt
         run: terraform fmt -check -diff -recursive  
 
