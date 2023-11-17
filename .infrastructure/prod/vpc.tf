@@ -69,7 +69,7 @@ resource "aws_route_table_association" "pub1" {
 # create eip for natgateway 
 resource "aws_eip" "nat_eip" {
   vpc = true
-
+  instance = aws_instance.paystridedb.id 
   tags = {
     name = "paystride-eip"
   }
