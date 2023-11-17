@@ -28,7 +28,7 @@ resource "aws_security_group" "paysrtide_backend" {
 
 # Aws security group for paystride backend 
 resource "aws_security_group" "paysrtide_db" {
-  name   = "HTTP and SSH"
+  name   = "database_sg"
   vpc_id = aws_vpc.main.id
 
   ingress {
