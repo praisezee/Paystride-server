@@ -18,13 +18,13 @@ resource "aws_subnet" "public-subnet" {
 }
 
 # create private subnet 
-resource "aws_subnet" "private-subnet" {
+resource "aws_subnet" "prublic-subnet-2" {
   vpc_id            = aws_vpc.main.id
   cidr_block        = "10.0.2.0/24"
   availability_zone = "us-east-1c"
 
   tags = {
-    Name = "paystride_private_subnet"
+    Name = "paystride_prublic_subnet-2"
   }
 }
 
@@ -64,37 +64,9 @@ resource "aws_route_table_association" "pub1" {
   route_table_id = aws_route_table.public_rt.id
 }
 
-
-
-# create eip for natgateway 
-resource "aws_eip" "nat_eip" {
-  vpc = true
-  tags = {
-    name = "paystridee-eip"
-  }
-}
-
-# Create a NAT gateway
-resource "aws_nat_gateway" "nat_gateway" {
-  allocation_id = aws_eip.nat_eip.id
-  subnet_id     = aws_subnet.public-subnet.id
+resource "aws_route_table_association" "pub2" {
+  subnet_id      = aws_subnet.public-subnet-2.id
+  route_table_id = aws_route_table.public_rt.id
 }
 
 
-# create rote table for private subnet 
-resource "aws_route_table" "private_rt" {
-  vpc_id = aws_vpc.main.id
-}
-
-# route table route for private subnet 
-resource "aws_route" "private_nat_gateway_route" {
-  route_table_id         = aws_route_table.private_rt.id
-  destination_cidr_block = "0.0.0.0/0"
-  nat_gateway_id         = aws_nat_gateway.nat_gateway.id
-}
-
-# route table association for private subnet 
-resource "aws_route_table_association" "private" {
-  subnet_id      = aws_subnet.private-subnet.id
-  route_table_id = aws_route_table.private_rt.id
-}
