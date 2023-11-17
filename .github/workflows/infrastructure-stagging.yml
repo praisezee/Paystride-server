@@ -12,6 +12,13 @@ on:
     paths: 
       - .infrastructure/stagging/**
 
+  workflow_dispatch:
+    inputs:
+      confirm_destroy:
+        description: 'Confirm manual destroy execution'
+        required: true
+        default: 'false'    
+
 env:
   AWS_ACCESS_KEY_ID: ${{ secrets.ACCESS_KEY }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.SECRET_KEY }}
@@ -46,7 +53,7 @@ jobs:
         run: terraform apply --auto-approve
         working-directory: .infrastructure/stagging
 
-      #- name: Terraform destroy 
-       # id: destroy 
-        #run: terraform destroy --auto-approve
-        #working-directory: .infrastructure/prod  
+      - name: Run Terraform Destroy
+        if: github.event.inputs.confirm_destroy == 'true' || github.event_name == 'workflow_dispatch'
+        run: terraform destroy --auto-approve
+        working-directory: .infrastructure/stagging
