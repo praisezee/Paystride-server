@@ -11,14 +11,24 @@ on:
       - master
     paths: 
       - .infrastructure/prod/**
+  workflow_dispatch:
+    inputs:
+      confirm_apply:
+        description: 'Confirm manual apply execution'
+        required: true
+        default: 'false'
+      confirm_destroy:
+        description: 'Confirm manual destroy execution'
+        required: true
+        default: 'false'
 
 env:
   AWS_ACCESS_KEY_ID: ${{ secrets.ACCESS_KEY }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.SECRET_KEY }}
 
 jobs:
-  build:
-    name: Build
+  apply:
+    name: Terraform Apply
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -45,3 +55,24 @@ jobs:
         id: apply
         run: terraform apply --auto-approve
         working-directory: .infrastructure/prod
+      
+      - name: Display Apply Output
+        run: echo "Terraform apply completed successfully."
+
+  destroy:
+    name: Terraform Destroy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v1
+
+      - name: Run Terraform Destroy
+        if: github.event.inputs.confirm_destroy == 'true'
+        run: terraform destroy --auto-approve
+        working-directory: .infrastructure/prod
+      
+      - name: Display Destroy Output
+        run: echo "Terraform destroy completed successfully."
