@@ -70,7 +70,7 @@ resource "aws_route_table_association" "pub1" {
 resource "aws_eip" "nat_eip" {
   vpc = true
   tags = {
-    name = "paystride-eip"
+    name = "paystridee-eip"
   }
 }
 
