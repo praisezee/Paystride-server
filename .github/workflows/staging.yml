@@ -117,7 +117,7 @@ jobs:
     - name: Deploy to EC2
       run: |
         rsync -avz --delete --exclude-from="custom.gitignore" -e "ssh -i ~/.ssh/id_rsa" ./ ubuntu@${{ secrets.STAGING_EC2_IP }}:/var/www/paystride/
-        ssh -i ~/.ssh/id_rsa ubuntu@${{ secrets.STAGING_EC2_IP }} 'sudo chown -R ubuntu:ubuntu /var/www && cd /var/www/paystride/ && composer install --no-interaction --prefer-dist --optimize-autoloader && php artisan migrate --force && php artisan key:generate'
+        ssh -i ~/.ssh/id_rsa ubuntu@${{ secrets.STAGING_EC2_IP }} 'sudo chown -R ubuntu:ubuntu /var/www && cd /var/www/paystride/ && composer install --no-interaction --prefer-dist --optimize-autoloader && php artisan migrate:fresh && php artisan key:generate'
 
     - name: file permission storage 
       run: |
