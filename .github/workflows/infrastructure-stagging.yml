@@ -44,7 +44,7 @@ jobs:
       - name: Terraform Apply
         id: apply
         run: terraform apply --auto-approve
-       working-directory: .infrastructure/stagging
+        working-directory: .infrastructure/stagging
 
       #- name: Terraform destroy 
        # id: destroy 
