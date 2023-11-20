@@ -5,7 +5,7 @@ resource "aws_instance" "paystride-backend"{
   associate_public_ip_address = true
   vpc_security_group_ids      = [aws_security_group.paysrtide_sg-stagging.id]
 tags = {
-    Name = "paystride-backend-prod-stagging"
+    Name = "paystride-backend-prod-staggingg"
   }
 }
 

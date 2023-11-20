@@ -6,7 +6,7 @@ resource "aws_instance" "paystride-backend"{
   subnet_id      = aws_subnet.public-subnet.id
   vpc_security_group_ids      = [aws_security_group.paysrtide_backend.id]
 tags = {
-    Name = "paystride-backend-prodd"
+    Name = "paystride-backend-prod"
   }
 }
 
