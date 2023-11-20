@@ -1,11 +1,9 @@
-name: Deploy Application
+name: Deploy Application-staging
 
 on:
   push:
     branches:
-      - master
-    paths-ignore:
-      - '.infrastructure/prod/**'  
+      - staging 
 
 jobs:
   deploy:
@@ -20,7 +18,7 @@ jobs:
         mkdir -p ~/.ssh/
         echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
-        ssh-keyscan -H ${{ secrets.EC2_PUBLIC_IP }} >> ~/.ssh/known_hosts
+        ssh-keyscan -H ${{ secrets.STAGING_EC2_IP }} >> ~/.ssh/known_hosts
 
     - name: Install PHP and dependencies
       run: sudo apt-get update && sudo apt-get install php php-mbstring php-xml
@@ -31,18 +29,18 @@ jobs:
         echo "APP_ENV=local" >> .env
         echo "APP_KEY=" >> .env
         echo "APP_DEBUG=true" >> .env
-        echo "APP_URL=${{ secrets.APP_URL }}" >> .env
+        echo "APP_URL=${{ secrets.STAGING_APP_URL }}" >> .env
 
         echo "LOG_CHANNEL=stack" >> .env
         echo "LOG_DEPRECATIONS_CHANNEL=null" >> .env
         echo "LOG_LEVEL=debug" >> .env
 
         echo "DB_CONNECTION=pgsql" >> .env
-        echo "DB_HOST=${{ secrets.DB_HOST }}" >> .env
+        echo "DB_HOST=127.0.0.1" >> .env
         echo "DB_PORT=5432" >> .env
         echo "DB_DATABASE=${{ secrets.DB_DATABASE }}" >> .env
         echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> .env
-        echo "DB_PASSWORD=${{ secrets.DATABASE_PASSWORD }}" >> .env
+        echo "DB_PASSWORD=${{ secrets.STAGING_DB_PASS }}" >> .env
 
         echo "BROADCAST_DRIVER=log" >> .env
         echo "CACHE_DRIVER=file" >> .env
@@ -91,7 +89,7 @@ jobs:
 
     - name: Change ownership of /var/www
       run: |
-        ssh -i ~/.ssh/id_rsa ubuntu@${{ secrets.EC2_PUBLIC_IP }} 'sudo chown -R ubuntu:ubuntu /var/www'
+        ssh -i ~/.ssh/id_rsa ubuntu@${{ secrets.STAGING_EC2_IP }} 'sudo chown -R ubuntu:ubuntu /var/www'
 
 
     - name: Create custom .gitignore
@@ -118,16 +116,16 @@ jobs:
 
     - name: Deploy to EC2
       run: |
-        rsync -avz --delete --exclude-from="custom.gitignore" -e "ssh -i ~/.ssh/id_rsa" ./ ubuntu@${{ secrets.EC2_PUBLIC_IP }}:/var/www/paystride/
-        ssh -i ~/.ssh/id_rsa ubuntu@${{ secrets.EC2_PUBLIC_IP }} 'sudo chown -R ubuntu:ubuntu /var/www && cd /var/www/paystride/ && composer install --no-interaction --prefer-dist --optimize-autoloader && php artisan migrate --force && php artisan key:generate'
+        rsync -avz --delete --exclude-from="custom.gitignore" -e "ssh -i ~/.ssh/id_rsa" ./ ubuntu@${{ secrets.STAGING_EC2_IP }}:/var/www/paystride/
+        ssh -i ~/.ssh/id_rsa ubuntu@${{ secrets.STAGING_EC2_IP }} 'sudo chown -R ubuntu:ubuntu /var/www && cd /var/www/paystride/ && composer install --no-interaction --prefer-dist --optimize-autoloader && php artisan migrate --force && php artisan key:generate'
 
     - name: file permission storage 
       run: |
-        ssh -i ~/.ssh/id_rsa ubuntu@${{ secrets.EC2_PUBLIC_IP }} 'sudo chmod -R ugo+rw /var/www/paystride/storage/logs'
+        ssh -i ~/.ssh/id_rsa ubuntu@${{ secrets.STAGING_EC2_IP }} 'sudo chmod -R ugo+rw /var/www/paystride/storage/logs'
 
     - name: file permision framework
       run: |
-        ssh -i ~/.ssh/id_rsa ubuntu@${{ secrets.EC2_PUBLIC_IP }} 'sudo chmod -R ugo+rw /var/www/paystride/storage/framework'
+        ssh -i ~/.ssh/id_rsa ubuntu@${{ secrets.STAGING_EC2_IP }} 'sudo chmod -R ugo+rw /var/www/paystride/storage/framework'
 
     - name: Clear SSH key
       run: rm ~/.ssh/id_rsa
