@@ -1,6 +1,6 @@
 # Aws security group for paystride backend 
 resource "aws_security_group" "paysrtide_sg-stagging" {
-  name   = "paystride_security_group-stagging "
+  name   = "paystride_security_group_stagging "
 
   ingress {
     from_port   = 80
