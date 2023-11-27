@@ -16,4 +16,7 @@ class Payment_point extends Model
     public function staff(){
         return $this->belongsTo(Staff::class);
     }
+    public function transaction(){
+        return $this->hasMany(Transaction::class);
+    }
 }

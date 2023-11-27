@@ -22,7 +22,7 @@ class StaffController extends Controller
 
         if(!$merchant) return response(['message' => 'Merchant not found'], 400);
 
-        $users = Staff::where('id',intval($id))->get();
+        $users = Staff::where('merchant_id',intval($id))->get();
 
         return response(['users', $users], 200);
     }

@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ApiKeyController;
 use App\Http\Controllers\SomethingController;
 use App\Http\Controllers\MerchantController;
+use App\Http\Controllers\PaymentPointController;
 use App\Http\Controllers\StaffController;
 use App\Models\Staff;
 
@@ -47,3 +48,7 @@ Route::post('/merchants/forgot-password', [MerchantController::class, 'forgot_pa
 Route::get('/merchants/{id}/users', [StaffController::class, 'show_staff']);
 Route::post('/merchants/users', [StaffController::class, 'create_staff']);
 Route::put('/merchants/users/{id}/roles', [StaffController::class, 'update_role']);
+
+Route::post('/merchant/payment-points',[PaymentPointController::class, 'create']);
+Route::get('/merchant/{id}/payment-points',[PaymentPointController::class, 'getAllPaymentPoint']);
+Route::get('/merchant/payment-points/{id}',[PaymentPointController::class, 'getSinglePaypoint']);
