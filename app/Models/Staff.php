@@ -9,11 +9,15 @@ class Staff extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'name', 'role', 'email', 'password', 'merchant_id','token'
+    ];
+
     public function merchant(){
         return $this->belongsTo(Merchant::class);
     }
 
-    public function payment_point(){
+    public function payment_points(){
         return $this->hasOne(Payment_point::class);
     }
 }

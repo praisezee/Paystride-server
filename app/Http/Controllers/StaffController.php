@@ -30,8 +30,7 @@ class StaffController extends Controller
     public function create_staff(Request $request){
         $validator = Validator::make($request->all(), [
             'name' => 'required|string',
-            'email' => 'required|email|unique:staffs,email',
-            'phone_number' => 'required|string',
+            'email' => 'required|email|unique:staff,email',
             'password' => 'required|string',
             'role' => 'required|string',
             'merchant_id' => 'required|integer',
@@ -65,7 +64,7 @@ class StaffController extends Controller
             ->where('merchant_id',$request->merchant_id)
             ->first();
 
-        if($staff) return response(['message' => 'Staff not found'], 400);
+        if(!$staff) return response(['message' => 'Staff not found'], 400);
 
         DB::transaction(function () use ($staff, $request){
             $staff->role = $request->role;
@@ -74,5 +73,4 @@ class StaffController extends Controller
 
         return response(['message'=> 'Staff role has been updated'], 202);
     }
-
 }

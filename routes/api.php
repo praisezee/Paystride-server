@@ -49,6 +49,8 @@ Route::get('/merchants/{id}/users', [StaffController::class, 'show_staff']);
 Route::post('/merchants/users', [StaffController::class, 'create_staff']);
 Route::put('/merchants/users/{id}/roles', [StaffController::class, 'update_role']);
 
-Route::post('/merchant/payment-points',[PaymentPointController::class, 'create']);
-Route::get('/merchant/{id}/payment-points',[PaymentPointController::class, 'getAllPaymentPoint']);
-Route::get('/merchant/payment-points/{id}',[PaymentPointController::class, 'getSinglePaypoint']);
+Route::post('/merchants/payment-points',[PaymentPointController::class, 'create']);
+Route::get('/merchants/{id}/payment-points',[PaymentPointController::class, 'getAllPaymentPoint']);
+Route::get('/merchants/payment-points/{id}',[PaymentPointController::class, 'getSinglePaypoint']);
+Route::put('/merchants/payment-points/{id}',[PaymentPointController::class,'editPaymentPoint']);
+Route::delete('/merchants/payment-points/{id}',[PaymentPointController::class,'deletePaymentPoint']);
