@@ -19,8 +19,12 @@ class Merchant extends Authenticatable
         return $this->hasMany(Staff::class);
     }
 
-    public function payment_point()
+    public function payment_points()
     {
         return $this->hasMany(Payment_point::class);
+    }
+
+    public function settlementAccount(){
+        return $this->hasMany(Settlement_Account::class);
     }
 }

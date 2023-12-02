@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\MerchantController;
+use App\Http\Controllers\TransactionController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -19,6 +20,7 @@ use Illuminate\Support\Facades\Route;
 //     Route::post('/merchant/forget-password',[MerchantController::class, 'forget_password']);
 //     Route::post('/merchant/reset-password',[MerchantController::class, 'reset_password']);
 //     Route::post('/merchant/verify-email', MerchantController::class, 'verifyEmail');
+//     Route::resource('transactions', TransactionController::class)->except(['destroy']);
 // });
 
 Route::get('/', function () {
