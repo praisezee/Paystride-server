@@ -13,15 +13,23 @@ return new class extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
-            $table->string('transaction_type'); // invoice, payment, deposit, withdrawal
-            $table->foreignId('payment_point_id')->references('id')->on('payment_points')->onDelete('cascade');
-            $table->foreignId('virtual_account_id')->references('id')->on('virtual_accounts')->onDelete('cascade');
-            $table->string('transaction_ref');
+            
+            $table->unsignedBigInteger('payment_point_id');
+
+            $table->unsignedBigInteger('virtual_account_id')->nullable();
+
             $table->text('transaction_description');
-            $table->decimal('amount', 10, 2);
-            $table->dateTime('datetime');
+
+            $table->string('transaction_type');
+            $table->string('transaction_ref');
+            $table->decimal('amount', 10, 2)->default(0);
             $table->string('status');
             $table->timestamps();
+
+
+            $table->foreign('payment_point_id')->references('id')->on('payment_points')->onDelete('restrict');
+
+            $table->foreign('virtual_account_id')->references('id')->on('virtual_accounts')->onDelete('restrict');
         });
     }
 

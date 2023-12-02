@@ -9,10 +9,6 @@ class Payment_point extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'name','merchant_id','staff_id'
-    ];
-
     public function merchant(){
         return $this->belongsTo(Merchant::class);
     }
@@ -20,7 +16,8 @@ class Payment_point extends Model
     public function staff(){
         return $this->belongsTo(Staff::class);
     }
-    public function transaction(){
-        return $this->hasMany(Transaction::class);
+
+    public function virtualAccounts(){
+        return $this->hasMany(VirtualAccount::class);
     }
 }
