@@ -10,8 +10,10 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
 use App\Mail\OtpMail;
+
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Response;
 use Laravel\Sanctum\PersonalAccessToken;
 
 class MerchantController extends Controller
@@ -21,7 +23,17 @@ class MerchantController extends Controller
      */
     public function index()
     {
-        //
+        // Transform the data using the MerchantResource if needed
+        $merchantResources = MerchantResource::collection(Merchant::all());
+
+        $response = [
+            'success' => true,
+            'statusCode' => 200,
+            'message' => count($merchantResources) > 0 ? 'Successfully fetched all merchants' : 'No merchants found',
+            'data' => $merchantResources,
+        ];
+
+        return Response::json($response);
     }
 
     /**
@@ -107,7 +119,14 @@ class MerchantController extends Controller
             // Transform the data using the MerchantResource
             $merchantResource = new MerchantResource($merchant);
 
-            return response(['message' => 'Email verified successfully', 'data' => $merchantResource, 'token' => $token], 200);
+            return response(['message' => 'Email verified successfully', 'data' => $merchantResource,], 200);
+            return Response::json([
+                'success' => true,
+                'statusCode' => 200,
+                'message' => 'Email verified successfully',
+                'token' => $token,
+                'data' => $merchantResource,
+            ]);
         } else {
             return response(['message' => 'Invalid OTP or email'], 400);
         }
@@ -160,10 +179,32 @@ class MerchantController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show($id)
     {
-        //
+        $merchant = Merchant::find($id);
+        if (!$merchant) {
+            return response()->json([
+                "status" => '',
+                "message" => 'Not found',
+            ], 404
+        );
+        }
+        
+        $merchantResource = new MerchantResource($merchant);
+        
+
+
+
+        $response = [
+            'success' => true,
+            'statusCode' => 200,
+            'message' => 'Successfully fetched all merchant',
+            'data' => $merchantResource,
+        ];
+
+        return Response::json($response);
     }
+
 
     /**
      * Show the form for editing the specified resource.
