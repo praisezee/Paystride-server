@@ -11,14 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('staffs', function (Blueprint $table) {
+        Schema::create('staff', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->string('role');
             $table->string('email')->unique();
             $table->string('password');
+            $table->string('phone_number');
             $table->foreignId('merchant_id')->references('id')->on('merchants')->onDelete('cascade');
             $table->string('token')->nullable();
+            $table->string('otp');
+            $table->boolean('isVerified')->default(false);
             $table->timestamps();
         });
     }
@@ -28,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('staffs');
+        Schema::dropIfExists('staff');
     }
 };

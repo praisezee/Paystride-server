@@ -5,19 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Staff extends Model
+class Settlement_Account extends Model
 {
     use HasFactory;
-
     protected $fillable = [
-        'name', 'role', 'email', 'password', 'merchant_id','token'
+        'account_name', 'account_number','bank_code','merchant_id'
     ];
-
-    public function merchant(){
+    public function merchant () {
         return $this->belongsTo(Merchant::class);
-    }
-
-    public function payment_points(){
-        return $this->hasOne(Payment_point::class);
     }
 }

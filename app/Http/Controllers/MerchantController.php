@@ -5,12 +5,12 @@ namespace App\Http\Controllers;
 use App\Http\Resources\MerchantResource;
 use App\Mail\ForgetPassword;
 use App\Models\Merchant;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
 use App\Mail\OtpMail;
-
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Response;
@@ -76,9 +76,8 @@ class MerchantController extends Controller
         return response(['message' => 'OTP sent to your email for verification'], 200);
     }
 
-    private function sendOtpEmail($email)
+    private function sendOtpEmail($email,$otp)
     {
-        $otp = rand(100000, 999999);
         $merchant = Merchant::where('email', $email)->first();
 
         if ($merchant) {
@@ -169,7 +168,7 @@ class MerchantController extends Controller
             ]);
 
             // Send OTP to user's email
-            $this->sendOtpEmail($request->email);
+            $this->sendOtpEmail($request->email,$otp);
 
             return response(['message' => 'OTP resent to your email for verification'], 200);
         } else {
