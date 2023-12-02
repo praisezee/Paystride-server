@@ -17,8 +17,11 @@ return new class extends Migration
             $table->string('role');
             $table->string('email')->unique();
             $table->string('password');
+            $table->string('phone_number');
             $table->foreignId('merchant_id')->references('id')->on('merchants')->onDelete('cascade');
             $table->string('token')->nullable();
+            $table->string('otp');
+            $table->boolean('isVerified')->default(false);
             $table->timestamps();
         });
     }

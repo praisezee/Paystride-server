@@ -6,6 +6,7 @@ use App\Http\Controllers\ApiKeyController;
 use App\Http\Controllers\SomethingController;
 use App\Http\Controllers\MerchantController;
 use App\Http\Controllers\PaymentPointController;
+use App\Http\Controllers\SettlementAccountController;
 use App\Http\Controllers\StaffController;
 use App\Models\Staff;
 
@@ -47,6 +48,8 @@ Route::post('/merchants/forgot-password', [MerchantController::class, 'forgot_pa
 
 Route::get('/merchants/{id}/users', [StaffController::class, 'show_staff']);
 Route::post('/merchants/users', [StaffController::class, 'create_staff']);
+Route::post('/merchants/users/verifyemail',[StaffController::class,'verifyEmail']);
+Route::post('/merchants/users/resend-otp',[StaffController::class,'resendOtp']);
 Route::put('/merchants/users/{id}/roles', [StaffController::class, 'update_role']);
 
 Route::post('/merchants/payment-points',[PaymentPointController::class, 'create']);
@@ -54,3 +57,8 @@ Route::get('/merchants/{id}/payment-points',[PaymentPointController::class, 'get
 Route::get('/merchants/payment-points/{id}',[PaymentPointController::class, 'getSinglePaypoint']);
 Route::put('/merchants/payment-points/{id}',[PaymentPointController::class,'editPaymentPoint']);
 Route::delete('/merchants/payment-points/{id}',[PaymentPointController::class,'deletePaymentPoint']);
+
+Route::get('merchant/{id}/settlements',[SettlementAccountController::class,'getAllSettlementAccounts']);// returns all settlement account associated to a merchant
+Route::post('/merchants/settlements',[SettlementAccountController::class,'createSettlementAccount']);// Creates a new settlement account
+Route::put('/merchants/settlements/{id}',[SettlementAccountController::class, 'editSettlementAccount']);
+Route::delete('/merchants/settlements/{id}',[SettlementAccountController::class, 'deleteSettlementAccount']);
