@@ -7,8 +7,20 @@ use Illuminate\Database\Eloquent\Model;
 
 class Transaction extends Model
 {
-    use HasFactory;
-    public function Payment_point (){
-        return $this->belongsTo(Payment_point::class);
+    protected $fillable = [
+        'payment_point_id',
+        'virtual_account_id',
+        'transaction_description',
+        //Add any other needed
+    ];
+
+    //Define the relationship with the PaymentPoint model
+    public function paymentPoint(){
+        return $this->belongsTo(PaymentPoint::class);
+    }
+
+    //define the relationship with the VirtualAccount model
+    public function virtualAccount() {
+        return $this->belongsTo(VirtualAccount::class);
     }
 }
