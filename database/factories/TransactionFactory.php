@@ -26,7 +26,7 @@ class TransactionFactory extends Factory
                 return \App\Models\VirtualAccount::factory()->create()->id;
             },
             'transaction_description' => $this->faker->sentence,
-            'transaction_type' => $this->faker->randomElement(['TypeA', 'TypeB', 'TypeC']),
+            'transaction_type' => $this->faker->randomElement(['Bank Transfer', 'Card']),
             'transaction_ref' => $this->faker->uuid,
             'amount' => $this->faker->randomFloat(2, 10, 1000),
             'status' => $this->faker->randomElement(['Pending', 'Completed', 'Failed']),

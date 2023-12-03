@@ -23,7 +23,7 @@ class StaffFactory extends Factory
             'name' => $this->faker->name,
             'role' => $this->faker->randomElement(['Admin', 'Manager', 'Staff']),
             'email' => $this->faker->unique()->safeEmail,
-            'password' => Hash::make('password'), // Change 'password' to the desired default password
+            'password' => Hash::make('password'), 
             'phone_number' => $this->faker->phoneNumber,
             'merchant_id' => function () {
                 return \App\Models\Merchant::factory()->create()->id;
