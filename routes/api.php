@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ApiKeyController;
+use App\Http\Controllers\LoginController;
 use App\Http\Controllers\SomethingController;
 use App\Http\Controllers\MerchantController;
 use App\Http\Controllers\PaymentPointController;
@@ -39,6 +40,8 @@ Route::post('/generate-api-key', [ApiKeyController::class, 'generateApiKey']);
 // Use apiResource for Merchant resource
 Route::apiResource('merchants', MerchantController::class)->except(['create', 'edit']);
 Route::get('/merchants/all', [MerchantController::class, 'index']);
+Route::post('/login',[LoginController::class,'login']);
+// Route::get('/logout',[LoginController::class,'logout']);
 
 // Add specific routes after apiResource to avoid conflicts
 Route::post('/verifyemail', [MerchantController::class, 'verifyEmail']);
