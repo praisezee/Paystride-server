@@ -3,7 +3,7 @@ name: Deploy Application
 on:
   push:
     branches:
-      - master
+      - develop
     paths-ignore:
       - '.infrastructure/prod/**'  
 
