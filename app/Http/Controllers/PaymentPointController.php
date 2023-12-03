@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Merchant;
-use App\Models\Payment_point;
+use App\Models\PaymentPoint;
 use App\Models\Staff;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -30,7 +30,7 @@ class PaymentPointController extends Controller
             ->first();
 
         if(!$merchant || !$staff) return response(['message'=>'Invalid merchant or staff'],400);
-        $newPayPoint = Payment_point::create([
+        $newPayPoint = PaymentPoint::create([
             'name'=>$request['name'],
             'phone_number'=>$request['phone_number'],
             'merchant_id'=> $request['merchant_id'],
@@ -41,7 +41,7 @@ class PaymentPointController extends Controller
     }
 
     public function getSinglePaypoint(string $id){
-        $payment__point = Payment_point::where('id', intval($id))
+        $payment__point = PaymentPoint::where('id', intval($id))
             ->first();
         if (!$payment__point) return response(['message'=> 'Payment Point does not exist'],400) ;
         return response(['data'=>$payment__point],200);
@@ -51,7 +51,7 @@ class PaymentPointController extends Controller
         $merchant = Merchant::where('id', intval($id))
             ->first();
         if(!$merchant) return response(['message' => 'Merchant not found'], 400);
-        $paymentsPoints = Payment_point::where('merchant_id', intval($id))->get();
+        $paymentsPoints = PaymentPoint::where('merchant_id', intval($id))->get();
         return response(['payment_points' => $paymentsPoints]);
     }
 
@@ -68,7 +68,7 @@ class PaymentPointController extends Controller
         $merchant = Merchant::where('id', intval($request->merchant_id));
         $staff = Staff::where('email',$request->staff_email)->where('merchant_id', intval($request->merchant_id));
         if(!$merchant || !$staff) return response(['message'=>'Invalid merchant or staff'],400);
-        $payment_point = Payment_point::where('id', intval($id))
+        $payment_point = PaymentPoint::where('id', intval($id))
         ->where("merchant_id", $merchant->id)
         ->where('staff_id', $staff->id)
         ->first();
@@ -83,7 +83,7 @@ class PaymentPointController extends Controller
     }
 
     public function deletePaymentPoint ($id){
-        $payment_point = Payment_point::where('id', intval($id));
+        $payment_point = PaymentPoint::where('id', intval($id));
         if(!$payment_point) return response(['message' => 'Payment point does not exist'],401);
         DB::transaction(function () use ($payment_point){
             $payment_point->delete();
