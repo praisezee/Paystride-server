@@ -2,12 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\PaymentPoint;
-use App\Models\Staff;
 use App\Models\Transaction;
-use App\Models\VirtualAccount;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Response;
 
 class TransactionController extends Controller
 {
@@ -47,8 +43,22 @@ class TransactionController extends Controller
 
     public function show(Transaction $transaction)
     {
-        // Show details of a specific transaction
+        $transaction->load(['virtualAccount', 'paymentPoint.staff']);
+    
+        $response = [
+            'success' => true,
+            'statusCode' => 200,
+            'message' => 'Transaction details fetched successfully',
+            'data' => [
+                'transaction' => $transaction->toArray(),
+                'virtual_account' => optional($transaction->virtualAccount)->only(['id', 'account_number', 'bank_name']),
+                'staff' => optional($transaction->paymentPoint->staff)->only(['id', 'name', 'role', 'email', 'phone_number']),
+            ],
+        ];
+    
+        return response()->json($response);
     }
+    
 
     public function edit(Transaction $transaction)
     {
