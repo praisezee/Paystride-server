@@ -7,11 +7,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class Transaction extends Model
 {
+    use HasFactory;
     protected $fillable = [
         'payment_point_id',
         'virtual_account_id',
         'transaction_description',
-        //Add any other needed
+        'transaction_type',
+        'transaction_ref',
+        'amount',
+        'status',
     ];
 
     //Define the relationship with the PaymentPoint model

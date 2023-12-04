@@ -18,6 +18,6 @@ class Staff extends Model
     }
 
     public function payment_points(){
-        return $this->hasOne(Payment_point::class);
+        return $this->hasOne(PaymentPoint::class);
     }
 }
