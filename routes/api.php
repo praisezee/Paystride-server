@@ -9,6 +9,7 @@ use App\Http\Controllers\PaymentPointController;
 use App\Http\Controllers\SettlementAccountController;
 use App\Http\Controllers\StaffController;
 use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\WebhookController;
 use App\Models\Staff;
 
 /*
@@ -65,3 +66,5 @@ Route::put('/merchants/settlements/{id}',[SettlementAccountController::class, 'e
 Route::delete('/merchants/settlements/{id}',[SettlementAccountController::class, 'deleteSettlementAccount']);
 
 Route::resource('/transactions',TransactionController::class);
+
+Route::post('/webhook', [WebhookController::class, 'handleWebhook']);
