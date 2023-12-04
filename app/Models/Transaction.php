@@ -12,7 +12,10 @@ class Transaction extends Model
         'payment_point_id',
         'virtual_account_id',
         'transaction_description',
-        //Add any other needed
+        'transaction_type',
+        'transaction_ref',
+        'amount',
+        'status',
     ];
 
     //Define the relationship with the PaymentPoint model

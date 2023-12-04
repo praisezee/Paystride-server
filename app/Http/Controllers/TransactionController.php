@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Transaction;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 
 class TransactionController extends Controller
 {
@@ -38,13 +39,41 @@ class TransactionController extends Controller
 
     public function store(Request $request)
     {
-        // Store a new transaction in the database
+        $postData = [
+            'amount' => $request->amount,
+            'email' => $request->email,
+            "currency" => $request->currency,
+            "initiate_type" => $request->initiate_type,
+            "transaction_ref" => $request->transaction_ref,
+            "callback_url" => $request->callback_url
+        ];
+
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . config('services.squad.api_key'),
+            'Content-Type' => 'application/json', // Set the content type based on Squad's requirements
+        ])->post(config('services.squad.api_base_url') . '/transaction/initiate', $postData);
+
+        $data = $response->json();
+
+        if ($response->successful()) {
+            $responseData = $response->json();
+            $transaction = new Transaction();
+            $transaction->amount = $postData['amount'];
+            $transaction->transaction_description = 'Payment initiated';
+            $transaction->transaction_type = $postData['initiate_type'];
+            $transaction->status = 'initiated'; 
+            $transaction->save();
+        } else {
+            $errorData = $response->json();
+            // Handle errors
+        }
+        return $data;
     }
 
     public function show(Transaction $transaction)
     {
         $transaction->load(['virtualAccount', 'paymentPoint.staff']);
-    
+
         $response = [
             'success' => true,
             'statusCode' => 200,
@@ -55,10 +84,10 @@ class TransactionController extends Controller
                 'staff' => optional($transaction->paymentPoint->staff)->only(['id', 'name', 'role', 'email', 'phone_number']),
             ],
         ];
-    
+
         return response()->json($response);
     }
-    
+
 
     public function edit(Transaction $transaction)
     {
