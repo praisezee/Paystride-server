@@ -58,6 +58,8 @@ class TransactionController extends Controller
         if ($response->successful()) {
             $responseData = $response->json();
             $transaction = new Transaction();
+            $transaction->payment_point_id = 1;
+            $transaction->virtual_account_id = 1;
             $transaction->amount = $postData['amount'];
             $transaction->transaction_description = 'Payment initiated';
             $transaction->transaction_type = $postData['initiate_type'];
