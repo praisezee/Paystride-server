@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('payment_points', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('phone_number');
-            $table->decimal('amount', 10, 2)->default(0); // Adjusted for currency values
-            $table->foreignId('staff_id')->references('id')->on('staffs')->onDelete('cascade');
+            $table->foreignId('merchant_id')->references('id')->on('merchants')->onDelete('cascade');
+            $table->foreignId('staff_id')->references('id')->on('staff')->onDelete('cascade');
+            $table->boolean('status')->default(true);
             $table->string('token')->nullable();
             $table->timestamps();
         });

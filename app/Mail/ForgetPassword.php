@@ -39,7 +39,7 @@ class ForgetPassword extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'mail.forgetPassword',
+            view: 'emails.forgetPassword',
             with: ['url' => $this->url]
         );
     }

@@ -5,9 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Payment_point extends Model
+class PaymentPoint extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'name',
+        'merchant_id',
+        'staff_id',
+        'status'
+    ];
 
     public function merchant(){
         return $this->belongsTo(Merchant::class);
@@ -15,5 +22,9 @@ class Payment_point extends Model
 
     public function staff(){
         return $this->belongsTo(Staff::class);
+    }
+
+    public function virtualAccounts(){
+        return $this->hasMany(VirtualAccount::class);
     }
 }
