@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laravel\Sanctum\HasApiTokens;
@@ -21,10 +22,10 @@ class Merchant extends Authenticatable
 
     public function payment_points()
     {
-        return $this->hasMany(Payment_point::class);
+        return $this->hasMany(PaymentPoint::class);
     }
 
     public function settlementAccount(){
-        return $this->hasMany(Settlement_Account::class);
+        return $this->hasMany(SettlementAccount::class);
     }
 }

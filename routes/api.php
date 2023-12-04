@@ -9,6 +9,8 @@ use App\Http\Controllers\MerchantController;
 use App\Http\Controllers\PaymentPointController;
 use App\Http\Controllers\SettlementAccountController;
 use App\Http\Controllers\StaffController;
+use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\WebhookController;
 use App\Models\Staff;
 
 /*
@@ -39,9 +41,13 @@ Route::post('/generate-api-key', [ApiKeyController::class, 'generateApiKey']);
 
 // Use apiResource for Merchant resource
 Route::apiResource('merchants', MerchantController::class)->except(['create', 'edit']);
+
 Route::get('/merchants/all', [MerchantController::class, 'index']);
 Route::post('/login',[LoginController::class,'login']);
 // Route::get('/logout',[LoginController::class,'logout']);
+
+Route::resource('merchants', MerchantController::class);
+
 
 // Add specific routes after apiResource to avoid conflicts
 Route::post('/verifyemail', [MerchantController::class, 'verifyEmail']);
@@ -65,3 +71,7 @@ Route::get('merchant/{id}/settlements',[SettlementAccountController::class,'getA
 Route::post('/merchants/settlements',[SettlementAccountController::class,'createSettlementAccount']);// Creates a new settlement account
 Route::put('/merchants/settlements/{id}',[SettlementAccountController::class, 'editSettlementAccount']);
 Route::delete('/merchants/settlements/{id}',[SettlementAccountController::class, 'deleteSettlementAccount']);
+
+Route::resource('/transactions',TransactionController::class);
+
+Route::post('/webhook', [WebhookController::class, 'handleWebhook']);

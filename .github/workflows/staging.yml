@@ -85,7 +85,7 @@ jobs:
         echo "VITE_PUSHER_APP_CLUSTER=\${PUSHER_APP_CLUSTER}" >> .env
     
     - name: Install Composer dependencies
-      run: composer install --no-interaction --prefer-dist --optimize-autoloader
+      run: composer update --no-interaction --prefer-dist --optimize-autoloader
 
     - name: Change ownership of /var/www
       run: |

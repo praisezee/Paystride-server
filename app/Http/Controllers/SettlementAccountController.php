@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Merchant;
-use App\Models\Settlement_Account;
+use App\Models\SettlementAccount;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -12,7 +12,7 @@ class SettlementAccountController extends Controller
 {
     //
     public function getAllSettlementAccounts (string $id){
-        $settlements = Settlement_Account::where('merchant_id', intval($id))->get();
+        $settlements = SettlementAccount::where('merchant_id', intval($id))->get();
         return response(['accounts'=>$settlements],200);
     }
 
@@ -33,7 +33,7 @@ class SettlementAccountController extends Controller
         $merchant = Merchant::where('id',$request->merchant_id)->first();
         if (!$merchant) return response(['message'=> 'Merchant does not exist'],400);
 
-        $settlement_account = Settlement_Account::where('merchant_id', $request->merchant_id)
+        $settlement_account = SettlementAccount::where('merchant_id', $request->merchant_id)
         ->where('account_name', $request->account_name)
         ->where('account_number',$request->account_number)
         ->where('bank_name',$request->bamk_name)
@@ -42,7 +42,7 @@ class SettlementAccountController extends Controller
         if ($settlement_account) return response(['message'=> 'This account already exists for this merchant'],400);
 
 
-        Settlement_Account::create([
+        SettlementAccount::create([
             'account_name' => $request->account_name,
             'bank_name' => $request->bank_name,
             'account_number' => $request->account_number,
@@ -63,7 +63,7 @@ class SettlementAccountController extends Controller
             return response(['message' => $validator->errors()->first()], 400);
         }
 
-        $settlement_account = Settlement_Account::where('id', intval($id))->where('merchant_id',$request->merchant_id)->first();
+        $settlement_account = SettlementAccount::where('id', intval($id))->where('merchant_id',$request->merchant_id)->first();
 
         if (!$settlement_account) return response(['message'=> 'Settlement account not found'],400);
 
@@ -78,7 +78,7 @@ class SettlementAccountController extends Controller
     }
 
     public function deleteSettlementAccount (string $id){
-        $settlement_account = Settlement_Account::where('id', intval($id))->first();
+        $settlement_account = SettlementAccount::where('id', intval($id))->first();
 
         if (!$settlement_account) return response(['message'=> 'Settlement account not found'],400);
 

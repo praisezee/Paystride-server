@@ -3,21 +3,21 @@
 namespace App\Http\Controllers;
 
 use App\Models\Merchant;
-use App\Models\Payment_point;
-use App\Models\Virtual_account;
+use App\Models\PaymentPoint;
+use App\Models\VirtualAccount;
 use Illuminate\Http\Request;
 
 class VirtualAccountController extends Controller
 {
     public function index(){
-        $virtualAccounts = Virtual_account::all();
+        $virtualAccounts = VirtualAccount::all();
         return view('virtual_accounts.index', compact('virtualAccounts'));
     }
 
     public function create(){
         //You can fetch the list of merchants and payment points if need be
         $merchants = Merchant::all();
-        $paymentPoints = Payment_point::all();
+        $paymentPoints = PaymentPoint::all();
 
         return view('virtual_accounts.create', compact('merchants', 'paymentPoints'));
     }
@@ -29,7 +29,7 @@ class VirtualAccountController extends Controller
         'payment_point_id' => 'required|exists:payment_points,id',
     ]);
 
-    Virtual_Account::create($validatedData);
+    VirtualAccount::create($validatedData);
 
         return
         redirect()->route('virtual-accounts.index')->with('success', 'Virtual Account created successfully!');
