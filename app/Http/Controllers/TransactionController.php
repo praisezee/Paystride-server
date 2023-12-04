@@ -60,6 +60,7 @@ class TransactionController extends Controller
             $transaction = new Transaction();
             $transaction->payment_point_id = 1;
             $transaction->virtual_account_id = 1;
+            $transaction->transaction_ref = $postData['transaction_ref'];
             $transaction->amount = $postData['amount'];
             $transaction->transaction_description = 'Payment initiated';
             $transaction->transaction_type = $postData['initiate_type'];
