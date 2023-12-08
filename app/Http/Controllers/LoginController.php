@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\LoginResource;
 use App\Models\Merchant;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -24,10 +25,11 @@ class LoginController extends Controller
         if(!$merchant || !$passwordMatch) return response(['message'=>"Invalid Login credentials"],401);
 
         $token = $merchant->createToken('token')->plainTextToken;
+        $loginResource = new LoginResource($merchant);
         return response([
             'message'=>'Logged in successfully',
             'token'=>$token,
-            'user'=>$merchant
+            'data'=>$loginResource
         ],200);
 
     }

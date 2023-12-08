@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('phone_number');
             $table->foreignId('merchant_id')->references('id')->on('merchants')->onDelete('cascade');
             $table->string('token')->nullable();
-            $table->string('otp');
+            $table->integer('otp')->nullable();
             $table->boolean('isVerified')->default(false);
             $table->timestamps();
         });

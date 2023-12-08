@@ -10,7 +10,7 @@ class Staff extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name', 'role', 'email', 'password', 'merchant_id','token'
+        'name', 'role', 'email', 'password', 'merchant_id','token',"phone_number","otp","isVerified"
     ];
 
     public function merchant(){

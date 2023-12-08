@@ -39,6 +39,9 @@ Route::post('/generate-api-key', [ApiKeyController::class, 'generateApiKey']);
 
 // Use apiResource for Merchant resource
 Route::apiResource('merchants', MerchantController::class)->except(['create', 'edit']);
+Route::apiResource('login',LoginController::class);
+Route::resource('login',LoginController::class);
+
 Route::get('/merchants/all', [MerchantController::class, 'index']);
 Route::post('/login',[LoginController::class,'login']);
 // Route::get('/logout',[LoginController::class,'logout']);
@@ -54,6 +57,7 @@ Route::post('/merchants/users', [StaffController::class, 'create_staff']);
 Route::post('/merchants/users/verifyemail',[StaffController::class,'verifyEmail']);
 Route::post('/merchants/users/resend-otp',[StaffController::class,'resendOtp']);
 Route::put('/merchants/users/{id}/roles', [StaffController::class, 'update_role']);
+Route::delete('merchants/users/{id}',[StaffController::class,'deleteStaff']);
 
 Route::post('/merchants/payment-points',[PaymentPointController::class, 'create']);
 Route::get('/merchants/{id}/payment-points',[PaymentPointController::class, 'getAllPaymentPoint']);

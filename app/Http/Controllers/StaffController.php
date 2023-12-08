@@ -70,7 +70,7 @@ class StaffController extends Controller
         }
     }
 
-    public function verifyEmail($request){
+    public function verifyEmail(Request $request){
         $validator = Validator::make($request->all(),[
             'email' => 'required|string',
             'otp'=>'required|numeric'
@@ -99,7 +99,7 @@ class StaffController extends Controller
         ]);
 
         $staff = Staff::where('email', $request->email)
-            ->whereNull('email_verified_at')
+            ->where('isVerified',false)
             ->first();
 
         if ($staff) {
@@ -155,5 +155,12 @@ class StaffController extends Controller
         });
 
         return response(['message'=> 'Staff role has been updated'], 202);
+    }
+
+    public function deleteStaff ($id){
+        $staff = Staff::where('id', $id)->first();
+        if (!$staff) return response(['message'=>'Staff does not exist'],400);
+        $staff->delete();
+        return response(['message'=>'Staff has been deleted successfully'],202);
     }
 }
