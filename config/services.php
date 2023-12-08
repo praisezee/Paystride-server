@@ -31,4 +31,10 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'squad' => [
+        'api_base_url' => env('SQUAD_API_BASE_URL'),
+        'api_key' => env('SQUAD_SECRET_KEY'),
+        'public_key' => env('SQUAD_PUBLIC_KEY'),
+        'client_id' => env('SQUAD_CLIENT_ID'),
+    ],
 ];
