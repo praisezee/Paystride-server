@@ -9,6 +9,7 @@ use App\Http\Controllers\MerchantController;
 use App\Http\Controllers\PaymentPointController;
 use App\Http\Controllers\SettlementAccountController;
 use App\Http\Controllers\StaffController;
+use App\Http\Controllers\SupportController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\WebhookController;
 use App\Models\Staff;
@@ -71,6 +72,9 @@ Route::get('merchant/{id}/settlements',[SettlementAccountController::class,'getA
 Route::post('/merchants/settlements',[SettlementAccountController::class,'createSettlementAccount']);// Creates a new settlement account
 Route::put('/merchants/settlements/{id}',[SettlementAccountController::class, 'editSettlementAccount']);
 Route::delete('/merchants/settlements/{id}',[SettlementAccountController::class, 'deleteSettlementAccount']);
+
+Route::post('/api/support/submit-request',[SupportController::class,'submitRequest']);
+Route::get('/api/support/past-issues',[SupportController::class,'getPastIssues']);
 
 Route::resource('/transactions',TransactionController::class);
 
