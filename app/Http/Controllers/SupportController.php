@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\SupportRequest;
 use Illuminate\Http\Request;
 
 class SupportController extends Controller
 {
-    //Submit a support request 
+    //Submit a support request
     public function submitRequest(Request $request){
         //Validate request data
         $validatedData = $request->validate([
@@ -18,16 +19,16 @@ class SupportController extends Controller
         ]);
 
         //Save support request to the database
-        $supportRequest = Support::create($validatedData);
+        SupportRequest::create($validatedData);
 
-        return response()->json(['message' => 'Support request submitted successfully']);
+        return response()->json(['message' => 'Support request submitted successfully'],201);
     }
 
     //Retrieve ahistory of support request and their resolution status
     public function getPastIssues(){
         //  Retrieve a historynof support requests and their resolution status
-        $pastIssues = Support::all();
+        $pastIssues = SupportRequest::all();
 
-        return response()->json(['pastIssues' => $pastIssues]);
+        return response()->json(['pastIssues' => $pastIssues],202);
     }
 }

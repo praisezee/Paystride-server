@@ -81,8 +81,8 @@ Route::post('/merchants/settlements',[SettlementAccountController::class,'create
 Route::put('/merchants/settlements/{id}',[SettlementAccountController::class, 'editSettlementAccount']);
 Route::delete('/merchants/settlements/{id}',[SettlementAccountController::class, 'deleteSettlementAccount']);
 
-Route::post('/api/support/submit-request',[SupportController::class,'submitRequest']);
-Route::get('/api/support/past-issues',[SupportController::class,'getPastIssues']);
+Route::post('support/submit-request',[SupportController::class,'submitRequest']);
+Route::get('/support/past-issues',[SupportController::class,'getPastIssues']);
 
 Route::resource('/transactions',TransactionController::class);
 
