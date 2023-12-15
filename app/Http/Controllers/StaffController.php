@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\StaffResources;
 use App\Mail\OtpMail;
 use App\Models\Merchant;
 use App\Models\Staff;
@@ -24,9 +25,15 @@ class StaffController extends Controller
 
         if(!$merchant) return response(['message' => 'Merchant not found'], 400);
 
-        $users = Staff::where('merchant_id',intval($id))->get();
+        $users = Staff::where('merchant_id',intval($id))->get()->map(function($staff){
+            return new StaffResources($staff);
+        });
+        /* foreach($users as $staff){
+            $staffResource = new StaffResources($staff);
+            return $staffResource;
+        }; */
 
-        return response(['users', $users], 200);
+        return response(['users'=> $users], 200);
     }
 
     public function create_staff(Request $request){
@@ -162,5 +169,12 @@ class StaffController extends Controller
         if (!$staff) return response(['message'=>'Staff does not exist'],400);
         $staff->delete();
         return response(['message'=>'Staff has been deleted successfully'],202);
+    }
+
+    public function getSingleStaff ($id){
+        $staff = Staff::where('id', $id)->first();
+        if (!$staff) return response(['message'=>'Staff does not exist'],400);
+        $staffResource = new StaffResources($staff);
+        return response(['staff' => $staffResource],200);
     }
 }

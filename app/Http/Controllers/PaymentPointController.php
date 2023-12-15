@@ -37,7 +37,7 @@ class PaymentPointController extends Controller
             'staff_id'=> $staff['id']
         ]);
 
-        return response(['message'=>'Paypoint created', $newPayPoint],201);
+        return response(['message'=>'Paypoint created', "payment_point"=>$newPayPoint],201);
     }
 
     public function getSinglePaypoint(string $id){
@@ -60,17 +60,18 @@ class PaymentPointController extends Controller
             'name' => 'nullable|string',
             'status' => 'nullable|boolean',
             'staff_email' => 'nullable|string',
-            'merchant_id' => 'required|string',
+            'merchant_id' => 'required|integer',
         ]);
         if ($validator -> fails()){
             return response(['message'=> $validator->errors()->first()],400);
         }
-        $merchant = Merchant::where('id', intval($request->merchant_id));
-        $staff = Staff::where('email',$request->staff_email)->where('merchant_id', intval($request->merchant_id));
-        if(!$merchant || !$staff) return response(['message'=>'Invalid merchant or staff'],400);
+
+        $merchant = Merchant::where('id', $request->merchant_id)->first();
+        if(!$merchant) return response(['message'=>'Invalid merchant Id'],400);
+
+        $staff = $request->staff_email ? Staff::where('email',$request->staff_email)->first() : null;
         $payment_point = PaymentPoint::where('id', intval($id))
         ->where("merchant_id", $merchant->id)
-        ->where('staff_id', $staff->id)
         ->first();
         if (!$payment_point) return response(['message'=> 'Paymentpoint not found'],400);
 
