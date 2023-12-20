@@ -45,6 +45,10 @@ Route::apiResource('merchants', MerchantController::class)->except(['create', 'e
 Route::apiResource('login',LoginController::class);
 Route::resource('login',LoginController::class);
 
+Route::apiResource('staff',StaffController::class);
+Route::resource('staff',StaffController::class);
+
+
 Route::get('/merchants/all', [MerchantController::class, 'index']);
 Route::post('/login',[LoginController::class,'login']);
 // Route::get('/logout',[LoginController::class,'logout']);
@@ -59,6 +63,7 @@ Route::post('/merchants/reset-password', [MerchantController::class, 'reset_pass
 Route::post('/merchants/forgot-password', [MerchantController::class, 'forgot_password']);
 
 Route::get('/merchants/{id}/users', [StaffController::class, 'show_staff']);
+Route::get('/merchants/users/{id}',[StaffController::class,'getSingleStaff']);
 Route::post('/merchants/users', [StaffController::class, 'create_staff']);
 Route::post('/merchants/users/verifyemail',[StaffController::class,'verifyEmail']);
 Route::post('/merchants/users/resend-otp',[StaffController::class,'resendOtp']);
@@ -76,8 +81,8 @@ Route::post('/merchants/settlements',[SettlementAccountController::class,'create
 Route::put('/merchants/settlements/{id}',[SettlementAccountController::class, 'editSettlementAccount']);
 Route::delete('/merchants/settlements/{id}',[SettlementAccountController::class, 'deleteSettlementAccount']);
 
-Route::post('/api/support/submit-request',[SupportController::class,'submitRequest']);
-Route::get('/api/support/past-issues',[SupportController::class,'getPastIssues']);
+Route::post('support/submit-request',[SupportController::class,'submitRequest']);
+Route::get('/support/past-issues',[SupportController::class,'getPastIssues']);
 
 Route::resource('/transactions',TransactionController::class);
 
