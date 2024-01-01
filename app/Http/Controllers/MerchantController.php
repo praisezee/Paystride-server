@@ -180,7 +180,7 @@ class MerchantController extends Controller
      */
     public function show($id)
     {
-        $merchant = Merchant::find($id);
+        $merchant = Merchant::where('id',$id)->first();
         if (!$merchant) {
             return response()->json([
                 "status" => '',
@@ -188,9 +188,9 @@ class MerchantController extends Controller
             ], 404
         );
         }
-        
+
         $merchantResource = new MerchantResource($merchant);
-        
+
 
 
 

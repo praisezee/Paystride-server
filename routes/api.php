@@ -57,6 +57,7 @@ Route::resource('merchants', MerchantController::class);
 
 
 // Add specific routes after apiResource to avoid conflicts
+Route::post('/register', [MerchantController::class,'store']);
 Route::post('/verifyemail', [MerchantController::class, 'verifyEmail']);
 Route::post('/merchants/resend-otp', [MerchantController::class, 'resendOtp']);
 Route::post('/merchants/reset-password', [MerchantController::class, 'reset_password']);
@@ -68,7 +69,7 @@ Route::post('/merchants/users', [StaffController::class, 'create_staff']);
 Route::post('/merchants/users/verifyemail',[StaffController::class,'verifyEmail']);
 Route::post('/merchants/users/resend-otp',[StaffController::class,'resendOtp']);
 Route::put('/merchants/users/{id}/roles', [StaffController::class, 'update_role']);
-Route::delete('merchants/users/{id}',[StaffController::class,'deleteStaff']);
+Route::delete('/merchants/users/{id}',[StaffController::class,'deleteStaff']);
 
 Route::post('/merchants/payment-points',[PaymentPointController::class, 'create']);
 Route::get('/merchants/{id}/payment-points',[PaymentPointController::class, 'getAllPaymentPoint']);
@@ -76,13 +77,13 @@ Route::get('/merchants/payment-points/{id}',[PaymentPointController::class, 'get
 Route::put('/merchants/payment-points/{id}',[PaymentPointController::class,'editPaymentPoint']);
 Route::delete('/merchants/payment-points/{id}',[PaymentPointController::class,'deletePaymentPoint']);
 
-Route::get('merchant/{id}/settlements',[SettlementAccountController::class,'getAllSettlementAccounts']);// returns all settlement account associated to a merchant
+Route::get('merchants/{id}/settlements',[SettlementAccountController::class,'getAllSettlementAccounts']);// returns all settlement account associated to a merchant
 Route::post('/merchants/settlements',[SettlementAccountController::class,'createSettlementAccount']);// Creates a new settlement account
 Route::put('/merchants/settlements/{id}',[SettlementAccountController::class, 'editSettlementAccount']);
 Route::delete('/merchants/settlements/{id}',[SettlementAccountController::class, 'deleteSettlementAccount']);
 
-Route::post('support/submit-request',[SupportController::class,'submitRequest']);
-Route::get('/support/past-issues',[SupportController::class,'getPastIssues']);
+Route::post('/supports/submit-request',[SupportController::class,'submitRequest']);
+Route::get('/supports/past-issues',[SupportController::class,'getPastIssues']);
 
 Route::resource('/transactions',TransactionController::class);
 

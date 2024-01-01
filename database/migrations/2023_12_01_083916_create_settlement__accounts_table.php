@@ -11,13 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('settlement__accounts', function (Blueprint $table) {
+        Schema::create('settlement_accounts', function (Blueprint $table) {
             $table->id();
             $table->string('account_name');
             $table->integer('account_number');
             $table->string('bank_name');
             $table->integer('bank_code')->nullable()->comment('Bank Code');
-            $table->foreignId('merchant_id')->references('id')->on('merchants');
+            $table->foreignId('merchant_id')->references('id')->on('merchants')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('settlement__accounts');
+        Schema::dropIfExists('settlement_accounts');
     }
 };

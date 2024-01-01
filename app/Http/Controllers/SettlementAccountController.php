@@ -36,7 +36,7 @@ class SettlementAccountController extends Controller
         $settlement_account = SettlementAccount::where('merchant_id', $request->merchant_id)
         ->where('account_name', $request->account_name)
         ->where('account_number',$request->account_number)
-        ->where('bank_name',$request->bamk_name)
+        ->where('bank_name',$request->bank_name)
         ->first();
 
         if ($settlement_account) return response(['message'=> 'This account already exists for this merchant'],400);
